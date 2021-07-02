@@ -131,6 +131,7 @@ const dispatch = useDispatch();
 
 ## Step 8: **Bind all Action-Creators and provide it with the previously defined variable (dispatch)**
 
+- within the _src/App.js_
 - requires 'bindActionCreators' method from redux
 - required pulling in all of our action creators as well
 
@@ -141,4 +142,37 @@ import { actionCreators } from './state/index'
 
 // Create a new variable with bindedActionCreators passing in the actionCreators and the dispatch created in the previous Step
 const AC = bindActionCreators(actionCreators, dispatch)
+```
+
+## Step 9: **Destructure out the methods from the binded action creators**
+
+- within the _src/App.js_
+
+```JavaScript
+const { depositMoney, withdrawMoney } = bindActionCreators(actionCreators, dispatch);
+// can now use above action-creators to manipulate the Store
+
+return (
+    <div>
+        <button onClick={() => depositMoney(1000)}>Deposit</button>
+        <button onClick={() => withdrawMoney(1000)}>Deposit</button>
+    </div>
+)
+```
+
+## Step 10: **Install and apply Redux-Thunk middleware to Store as third param**
+
+- within _src/state/store.js_
+- dispatch is asyncronous
+
+```JavaScript
+import { createStore, applyMiddleware } from 'redux'
+import reducers from './reducers/index'
+import thunk from 'redux-thunk'
+
+export const store = createStore(
+    reducers,
+    {},
+    appleMiddelware(thunk)
+)
 ```
