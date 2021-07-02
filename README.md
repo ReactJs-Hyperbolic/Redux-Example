@@ -1,70 +1,110 @@
-# Getting Started with Create React App
+# Redux Process
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Step 1: **Create Reducers**
 
-## Available Scripts
+- within _state/reducers/accountReducer.js_
+- Function that returns state within the /reducer
 
-In the project directory, you can run:
+```JavaScript
+const reducer = (state = 0, action ) => {
+    Switch(action.type) {
+        case "deposite":
+            return state + action.payload;
+        case "withdraw":
+            return state - action.payload;
+        default:
+            return state;
+    }
+}
 
-### `npm start`
+export default reducer;
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Step 2: **Combine Reducers**
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- within _state/reducers/index.js_
+- Even if there is only one reducer such as this example
+- Requires importing {combineReducers} from 'redux'
+- As well as our reducer from accountReducer
 
-### `npm test`
+```JavaScript
+import {combineReducers} from 'redux'
+import accountReducer from './accountReducer'
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+const reducers = combineReducers({
+    // Takes in a key:value pair
+    account: accountReducer
+})
 
-### `npm run build`
+// Export the combined reducers
+export default reducers;
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Step 3: **Create Store**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- within _state/store.js_
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```JavaScript
+import {createStore} from 'redux'
+import reducers from './reducers/index.js'
 
-### `npm run eject`
+export const store = createStore(
+    reducers,
+    {}
+);
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Step 4: **Provide our App with access to Store (state)**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- within _src/index.js_
+- Wrap our App in a Provider which contains the data in the store
+- Send the Store data through as prop to Provider
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```JavaScript
+import { Provider } from 'react-redux';
+import { store } from './state/store';
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+ReactDOM.render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </React.StrictMode>,
+  document.getElementById('root')
+);
+```
 
-## Learn More
+## Step 5: **Create Action-Creators to update Store**
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- within new dir _state/action-creators/index.html_
+- Adds the ability to update our Store
+- Function that Dispatches an Action to the Reducer which interprets the Action to manipulate the Store
+- Usually have different files for individual Actions but will use index.html in this smaller example
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### (First Action-Creator)
 
-### Code Splitting
+```JavaScript
+// Define the action which takes in a parameter
+export const depositMoney = (amount) => {
+    // Create an Action & Dispatch it (by returning another function)
+    return (dispatch) => {
+        dispatch({
+            type: 'deposit',
+            payload: amount
+        });
+    }
+}
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### (Second Action-Creator)
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```JavaScript
+export const withdrawMoney = (amount) => {
+    return (dispatch) => {
+        dispatch({
+            type: 'withdraw',
+            payload: amount
+        })
+    }
+}
+```
