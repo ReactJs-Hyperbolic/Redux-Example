@@ -108,3 +108,37 @@ export const withdrawMoney = (amount) => {
     }
 }
 ```
+
+## Step 6: **Combine Action-Creators in a 'central' .js file (index.js)**
+
+- within _src/state/index.js_
+- export everything (\*) from _./action-creators/index_ as 'actionCreators'
+- the following line will house all of our actions
+
+```JavaScript
+export * as actionCreators from './action-creators/index.js'
+```
+
+## Step 7: **Use the Actions inside the App.js**
+
+- useDispatch within the _src/App.js_
+
+```JavaScript
+import { useSelector, useDispatch } from 'react-redux'
+
+const dispatch = useDispatch();
+```
+
+## Step 8: **Bind all Action-Creators and provide it with the previously defined variable (dispatch)**
+
+- requires 'bindActionCreators' method from redux
+- required pulling in all of our action creators as well
+
+```JavaScript
+import { bindActionCreators } from 'redux'
+// import the following created and exported in Step 6
+import { actionCreators } from './state/index'
+
+// Create a new variable with bindedActionCreators passing in the actionCreators and the dispatch created in the previous Step
+const AC = bindActionCreators(actionCreators, dispatch)
+```
