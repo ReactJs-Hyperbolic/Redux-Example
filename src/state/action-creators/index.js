@@ -1,4 +1,5 @@
 export const depositMoney = amount => {
+  // Create an Action & Dispatch it (by returning another function)
   return dispatch => {
     dispatch({
       type: 'deposit',
