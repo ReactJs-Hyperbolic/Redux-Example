@@ -1,5 +1,11 @@
 # Redux Process
 
+## Dependencies (NPM):
+
+1. 'redux'
+2. 'react-redux'
+3. 'react-thunk'
+
 ## Step 1: **Create Reducers**
 
 - within _state/reducers/accountReducer.js_
