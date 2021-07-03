@@ -2,9 +2,9 @@
 const reducer = (state = 0, action) => {
   switch (action.type) {
     case 'deposit':
-      return state + action.payload;
+      return parseInt(state) + parseInt(action.payload);
     case 'withdraw':
-      return state - action.payload;
+      return parseInt(state) - parseInt(action.payload);
     default:
       return state;
   }

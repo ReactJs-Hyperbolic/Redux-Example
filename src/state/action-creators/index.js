@@ -5,6 +5,7 @@ export const depositMoney = amount => {
       type: 'deposit',
       payload: amount,
     });
+    console.log('Deposited Mula');
   };
 };
 
